@@ -9,7 +9,7 @@ import AddCardPopup from './AddCardPopup.js'
 import EditAvatarPopup from './EditAvatarPopup.js'
 import ConfirmationPopup from './ConfirmationPopup.js'
 import ImagePopup from './ImagePopup.js'
-import api from '../utils/Api.js'
+import api from '../utils/api.js'
 
 
 function App() {
@@ -23,24 +23,17 @@ function App() {
     avatar: ''
   });
   const [cards, getCardsData] = useState([])
-  const [selectedCard, showSelectedCard] = useState()
+  const [selectedCard, showSelectedCard] = useState(null)
 
   useEffect(() => {
-    api.getInitialCards()
+    Promise.all([api.getUserInfo(), api.getInitialCards()])
       .then((data) => {
-        getCardsData(data);
+        getUserData(data[0])
+        getCardsData([...data[1]]);
       })
       .catch((err) => console.log(err));
   }, []);
-
-  useEffect(() => {
-    api.getUserInfo()
-      .then((data) => {
-        getUserData(data);
-      })
-      .catch((err) => console.log(err));
-  }, []);
-
+  
   function handleCardClick(card) {
     showSelectedCard(card)
   }
@@ -57,7 +50,7 @@ function App() {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
-    showSelectedCard(false)
+    showSelectedCard(null)
   }
 
   return (
