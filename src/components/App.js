@@ -33,6 +33,8 @@ function App() {
       })
       .catch((err) => console.log(err));
   }, []);
+
+  console.log(cards)
   
   function handleCardClick(card) {
     showSelectedCard(card)
